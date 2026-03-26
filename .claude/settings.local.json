@@ -4,8 +4,16 @@
       "Bash(claude:*)",
       "Bash(git checkout:*)",
       "Bash(git merge:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); deps={**d.get\\(''''dependencies'''',{}\\), **d.get\\(''''devDependencies'''',{}\\)}; keys=[''''sanity'''',''''next-sanity'''',''''@sanity/visual-editing'''',''''@sanity/vision'''',''''next'''',''''@sanity/presentation'''']; [print\\(f''''{k}: {deps.get\\(k,\"\"NOT FOUND\"\"\\)}''''\\) for k in keys]\")",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); exports=d.get\\(''''exports'''',{}\\); [print\\(k\\) for k in exports.keys\\(\\)]\")",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(''''version:'''', d.get\\(''''version''''\\)\\); print\\(''''deps:'''', json.dumps\\(d.get\\(''''dependencies'''',{}\\), indent=2\\)\\)\")",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(''''version:'''', d.get\\(''''version''''\\)\\); exports=d.get\\(''''exports'''',{}\\); [print\\(k\\) for k in exports.keys\\(\\)]\")",
+      "Bash(node -e \"const m = require\\(''/Users/finnbennett/Downloads/three-altitudes/node_modules/next-sanity/draft-mode''\\); console.log\\(Object.keys\\(m\\)\\)\")",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(''''version:'''', d.get\\(''''version''''\\)\\)\")",
+      "Bash(ln -sf /Users/finnbennett/Downloads/three-altitudes/.env.local /Users/finnbennett/Downloads/three-altitudes/.claude/worktrees/tender-lehmann/.env.local)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ]
   }
 }
-
