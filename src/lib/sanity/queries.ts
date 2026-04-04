@@ -6,6 +6,7 @@ import type {
   SanityHero,
   SanityAudioWork,
   SanityAviation,
+  SanitySettings,
 } from './types';
 
 // ─── Web Projects ────────────────────────────────────────────────────────────
@@ -91,6 +92,14 @@ const audioWorkQuery = `
       code,
       "description": description,
     }, []),
+    "tracks": coalesce(tracks[] {
+      trackName,
+      artistName,
+      albumName,
+      "albumArtUrl": albumArt.asset->url,
+      spotifyUrl,
+      role,
+    }, []),
   }
 `;
 
@@ -122,6 +131,26 @@ export async function getAviation(): Promise<SanityAviation | null> {
   try {
     const { data } = await sanityFetch({ query: aviationQuery, tags: ['aviation'] });
     return (data as SanityAviation | null) ?? null;
+  } catch {
+    return null;
+  }
+}
+
+// ─── Site Settings ────────────────────────────────────────────────────────────
+
+const siteSettingsQuery = `
+  *[_type == "siteSettings"][0] {
+    siteName,
+    email,
+    "heroVideoUrl": heroVideo.asset->url,
+  }
+`;
+
+export async function getSiteSettings(): Promise<SanitySettings | null> {
+  if (!isSanityConfigured) return null;
+  try {
+    const { data } = await sanityFetch({ query: siteSettingsQuery, tags: ['siteSettings'] });
+    return (data as SanitySettings | null) ?? null;
   } catch {
     return null;
   }

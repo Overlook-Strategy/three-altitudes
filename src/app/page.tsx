@@ -2,6 +2,7 @@ import { HUD } from '@/components/ui/HUD';
 import { ScrollSections } from '@/components/ui/ScrollSections';
 import { GhostingCode } from '@/components/ui/GhostingCode';
 import { MediaLayers } from '@/components/ui/MediaLayers';
+import { HeroVideo } from '@/components/ui/HeroVideo';
 import { MainCanvasClient } from '@/components/canvas/MainCanvasClient';
 import {
   getWebProjects,
@@ -9,21 +10,24 @@ import {
   getHero,
   getAudioWork,
   getAviation,
+  getSiteSettings,
 } from '@/lib/sanity/queries';
 
 export default async function HomePage() {
-  const [webProjects, devProjects, hero, audioWork, aviation] = await Promise.all([
+  const [webProjects, devProjects, hero, audioWork, aviation, siteSettings] = await Promise.all([
     getWebProjects(),
     getDevProjects(),
     getHero(),
     getAudioWork(),
     getAviation(),
+    getSiteSettings(),
   ]);
 
   return (
     <>
       <MainCanvasClient />
       <MediaLayers />
+      <HeroVideo src={siteSettings?.heroVideoUrl} />
       <GhostingCode />
       <HUD />
       <ScrollSections />

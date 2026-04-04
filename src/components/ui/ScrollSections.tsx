@@ -3,9 +3,15 @@
 import { useState, useEffect, useRef } from 'react';
 import { useScroll } from '@/contexts/ScrollContext';
 import { AirplaneCursor } from './AirplaneCursor';
+import { CaliforniaTime } from './CaliforniaTime';
 
 const IDENTITIES = ['PILOT', 'PRODUCER', 'DEVELOPER'];
 
+const FEATURED_TRACKS = [
+  { num: '01', title: 'Mineral King', artist: 'Mineral King', role: 'PRODUCTION', spotifyUrl: 'https://open.spotify.com' },
+  { num: '02', title: 'Strange Case', artist: 'Sublime w/ Rome', role: 'FOH ENGINEER', spotifyUrl: 'https://open.spotify.com' },
+  { num: '03', title: 'Jakob Nowell', artist: 'Jakob Nowell', role: 'LIVE SOUND', spotifyUrl: 'https://open.spotify.com' },
+];
 
 const PROJECTS = [
   {
@@ -411,62 +417,76 @@ export function ScrollSections() {
             opacity: show('shoreline') ? 1 : 0,
             transition: 'opacity 0.9s ease',
             pointerEvents: show('shoreline') ? 'all' : 'none',
+            overflow: 'hidden',
           }}
         >
-          <h1
-            className="serif-text"
-            style={{
-              fontSize: 'clamp(3.5rem, 9vw, 8rem)',
-              fontWeight: 300,
-              color: '#e8f5f5',
-              letterSpacing: '0.12em',
-              marginBottom: '1.5rem',
-              lineHeight: 1,
-              textAlign: 'center',
-              zIndex: 1,
-            }}
-          >
-            FINN BENNETT
-          </h1>
-
+          {/* Bottom-left name + identity + time block */}
           <div
-            className="hud-text"
             style={{
-              fontSize: 'clamp(0.55rem, 1.2vw, 0.75rem)',
-              letterSpacing: '0.4em',
-              color: '#3dd9c4',
-              opacity: 0.7,
-              height: '1.4em',
-              overflow: 'hidden',
+              position: 'absolute',
+              bottom: 'clamp(1.5rem, 4vh, 3rem)',
+              left: 'clamp(1.5rem, 3vw, 3rem)',
+              zIndex: 1,
               display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '1em',
-              zIndex: 1,
+              flexDirection: 'column',
+              gap: '0.55rem',
             }}
           >
-            <span key={identityIndex} style={{ animation: 'identity-enter 0.5s ease forwards' }}>
-              {IDENTITIES[identityIndex]}
-            </span>
-            <span style={{ opacity: 0.3 }}>//</span>
-            <span style={{ opacity: 0.3 }}>{IDENTITIES[(identityIndex + 1) % 3]}</span>
-            <span style={{ opacity: 0.15 }}>//</span>
-            <span style={{ opacity: 0.15 }}>{IDENTITIES[(identityIndex + 2) % 3]}</span>
-          </div>
+            <p
+              className="serif-text"
+              style={{
+                fontSize: 'clamp(1.1rem, 2.2vw, 1.7rem)',
+                fontWeight: 300,
+                color: '#e8f5f5',
+                letterSpacing: '0.16em',
+                lineHeight: 1,
+                opacity: 0.88,
+              }}
+            >
+              FINN BENNETT
+            </p>
 
-          <p
-            className="hud-text"
-            style={{
-              marginTop: '3rem',
-              fontSize: '0.4rem',
-              letterSpacing: '0.4em',
-              color: '#3dd9c4',
-              opacity: 0.2,
-              zIndex: 1,
-            }}
-          >
-            VENTURA, CALIFORNIA  //  34.2746° N  119.2290° W
-          </p>
+            <div
+              className="hud-text"
+              style={{
+                fontSize: 'clamp(0.42rem, 0.9vw, 0.58rem)',
+                letterSpacing: '0.38em',
+                color: '#3dd9c4',
+                opacity: 0.55,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.7em',
+                height: '1.3em',
+                overflow: 'hidden',
+              }}
+            >
+              <span key={identityIndex} style={{ animation: 'identity-enter 0.5s ease forwards' }}>
+                {IDENTITIES[identityIndex]}
+              </span>
+              <span style={{ opacity: 0.35 }}>//</span>
+              <span style={{ opacity: 0.35 }}>{IDENTITIES[(identityIndex + 1) % 3]}</span>
+              <span style={{ opacity: 0.18 }}>//</span>
+              <span style={{ opacity: 0.18 }}>{IDENTITIES[(identityIndex + 2) % 3]}</span>
+            </div>
+
+            <div
+              className="hud-text"
+              style={{
+                fontSize: 'clamp(0.36rem, 0.75vw, 0.5rem)',
+                letterSpacing: '0.32em',
+                color: '#3dd9c4',
+                opacity: 0.25,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5em',
+              }}
+            >
+              <span>VENTURA, CA</span>
+              <span style={{ opacity: 0.4 }}>//</span>
+              <CaliforniaTime />
+              <span style={{ opacity: 0.4 }}>PT</span>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -658,48 +678,114 @@ export function ScrollSections() {
 
               </div>
 
-              {/* Center col: Spotify embed */}
+              {/* Center col: Featured Tracks */}
               <div style={{ position: 'relative', ...pocketAnim(0.22) }}>
 
-                {/* Corner brackets */}
-                <div style={{ position: 'absolute', top: -9, left: -9, width: 16, height: 16, borderTop: '1px solid rgba(255,140,0,0.22)', borderLeft: '1px solid rgba(255,140,0,0.22)', zIndex: 2, pointerEvents: 'none' }} />
-                <div style={{ position: 'absolute', top: -9, right: -9, width: 16, height: 16, borderTop: '1px solid rgba(255,140,0,0.22)', borderRight: '1px solid rgba(255,140,0,0.22)', zIndex: 2, pointerEvents: 'none' }} />
-                <div style={{ position: 'absolute', bottom: -9, left: -9, width: 16, height: 16, borderBottom: '1px solid rgba(255,140,0,0.22)', borderLeft: '1px solid rgba(255,140,0,0.22)', zIndex: 2, pointerEvents: 'none' }} />
-                <div style={{ position: 'absolute', bottom: -9, right: -9, width: 16, height: 16, borderBottom: '1px solid rgba(255,140,0,0.22)', borderRight: '1px solid rgba(255,140,0,0.22)', zIndex: 2, pointerEvents: 'none' }} />
+                <p className="hud-text" style={{ fontSize: '0.26rem', letterSpacing: '0.44em', color: '#ff8c00', opacity: 0.22, marginBottom: '0.65rem' }}>
+                  SELECTED TRACKS
+                </p>
 
-                {/* Ambient glow */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    inset: '-50px -35px',
-                    background: 'radial-gradient(ellipse 70% 55% at 50% 50%, rgba(255,140,0,0.055) 0%, transparent 70%)',
-                    pointerEvents: 'none',
-                  }}
-                />
+                {/* Track list */}
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  {FEATURED_TRACKS.map(({ num, title, artist, role, spotifyUrl }, i) => (
+                    <a
+                      key={num}
+                      href={spotifyUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.75rem',
+                        padding: '0.6rem 0',
+                        borderBottom: `1px solid rgba(255,140,0,${i === FEATURED_TRACKS.length - 1 ? 0 : 0.08})`,
+                        textDecoration: 'none',
+                        cursor: 'pointer',
+                        transition: 'opacity 0.2s ease',
+                      }}
+                      onMouseEnter={e => (e.currentTarget.style.opacity = '0.72')}
+                      onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
+                    >
+                      {/* Track number */}
+                      <span className="hud-text" style={{ fontSize: '0.2rem', letterSpacing: '0.2em', color: '#ff8c00', opacity: 0.28, minWidth: '1.4rem', flexShrink: 0 }}>
+                        {num}
+                      </span>
 
-                <iframe
-                  title="Overlook Audio — Selected Works"
-                  src="https://open.spotify.com/embed/playlist/7x8qaRT5L4UVebsbvzRtzE?utm_source=generator&theme=0"
-                  width="100%"
-                  style={{
-                    height: 'clamp(280px, 38vh, 352px)',
-                    border: 'none',
-                    borderRadius: '8px',
-                    display: 'block',
-                    position: 'relative',
-                    zIndex: 1,
-                  }}
-                  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                  loading="lazy"
-                />
+                      {/* Track info */}
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <p
+                          className="serif-text"
+                          style={{
+                            fontSize: 'clamp(0.8rem, 1.1vw, 0.95rem)',
+                            fontWeight: 400,
+                            color: '#f5e6d0',
+                            letterSpacing: '0.03em',
+                            lineHeight: 1.2,
+                            marginBottom: '0.18rem',
+                            opacity: 0.9,
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                          }}
+                        >
+                          {title}
+                        </p>
+                        <p className="hud-text" style={{ fontSize: '0.21rem', letterSpacing: '0.16em', color: '#ff8c00', opacity: 0.3 }}>
+                          {artist}
+                        </p>
+                      </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.55rem', padding: '0 0.2rem' }}>
-                  <p className="hud-text" style={{ fontSize: '0.23rem', letterSpacing: '0.28em', color: '#ff8c00', opacity: 0.16 }}>
-                    SELECTED WORKS
-                  </p>
-                  <p className="hud-text" style={{ fontSize: '0.23rem', letterSpacing: '0.28em', color: '#ff8c00', opacity: 0.16 }}>
-                    SPOTIFY
-                  </p>
+                      {/* Role badge */}
+                      <span
+                        className="hud-text"
+                        style={{
+                          fontSize: '0.19rem',
+                          letterSpacing: '0.18em',
+                          color: '#ff8c00',
+                          opacity: 0.28,
+                          border: '1px solid rgba(255,140,0,0.14)',
+                          padding: '0.08rem 0.28rem',
+                          whiteSpace: 'nowrap',
+                          flexShrink: 0,
+                        }}
+                      >
+                        {role}
+                      </span>
+
+                      {/* Spotify arrow */}
+                      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style={{ flexShrink: 0, opacity: 0.22 }}>
+                        <path d="M1 9L9 1M9 1H3M9 1V7" stroke="#ff8c00" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </a>
+                  ))}
+                </div>
+
+                {/* "All tracks" link */}
+                <div style={{ marginTop: '0.65rem', display: 'flex', justifyContent: 'flex-end' }}>
+                  <a
+                    href="https://open.spotify.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hud-text"
+                    style={{
+                      fontSize: '0.21rem',
+                      letterSpacing: '0.28em',
+                      color: '#ff8c00',
+                      opacity: 0.18,
+                      textDecoration: 'none',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.3rem',
+                      transition: 'opacity 0.2s ease',
+                    }}
+                    onMouseEnter={e => (e.currentTarget.style.opacity = '0.45')}
+                    onMouseLeave={e => (e.currentTarget.style.opacity = '0.18')}
+                  >
+                    FULL CATALOG ON SPOTIFY
+                    <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+                      <path d="M1 7L7 1M7 1H2.5M7 1V5.5" stroke="#ff8c00" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </a>
                 </div>
 
               </div>

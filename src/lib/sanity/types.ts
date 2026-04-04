@@ -44,6 +44,15 @@ export interface SanityDiscipline {
   description: string;
 }
 
+export interface SanityTrack {
+  trackName: string;
+  artistName: string;
+  albumName: string;
+  albumArtUrl?: string;
+  spotifyUrl?: string;
+  role?: string;
+}
+
 export interface SanityAudioWork {
   headline: string;
   sectionTitle: string;
@@ -51,6 +60,7 @@ export interface SanityAudioWork {
   stats: SanityAudioStat[];
   touringCredits: SanityTouringCredit[];
   disciplines: SanityDiscipline[];
+  tracks: SanityTrack[];
 }
 
 export interface SanityGauge {
@@ -76,4 +86,5 @@ export interface SanityAviation {
 export interface SanitySettings {
   siteName: string;
   email: string;
+  heroVideoUrl?: string;
 }
