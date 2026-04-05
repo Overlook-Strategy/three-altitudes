@@ -10,6 +10,7 @@ export interface SanityWebProject {
   tech: string[];
   role: string;
   type: string;
+  screenshotUrl?: string | null;
 }
 
 export interface SanityDevProject {

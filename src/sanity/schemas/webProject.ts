@@ -65,6 +65,13 @@ export const webProject = defineType({
       },
     }),
     defineField({
+      name: 'screenshot',
+      title: 'Screenshot',
+      type: 'image',
+      description: 'Preview screenshot shown in the browser mockup when the live iframe is unavailable.',
+      options: { hotspot: true },
+    }),
+    defineField({
       name: 'order',
       title: 'Display Order',
       type: 'number',
@@ -72,6 +79,6 @@ export const webProject = defineType({
     }),
   ],
   preview: {
-    select: { title: 'name', subtitle: 'domain' },
+    select: { title: 'name', subtitle: 'domain', media: 'screenshot' },
   },
 });
