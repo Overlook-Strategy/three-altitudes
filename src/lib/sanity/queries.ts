@@ -21,6 +21,7 @@ const webProjectsQuery = `
     "tech": coalesce(tech, []),
     "role": coalesce(role, ""),
     "type": coalesce(projectType, ""),
+    "screenshotUrl": screenshot.asset->url,
   }
 `;
 
