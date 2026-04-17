@@ -53,7 +53,8 @@ export function SceneManager({ transitionRef, cameraRef, cameraLocked }: SceneMa
     smoothProgress.current += (rawProgress - smoothProgress.current) * 0.06;
     smoothVelocity.current += (rawVelocity - smoothVelocity.current) * 0.1;
 
-    const p = smoothProgress.current;    const v = smoothVelocity.current;
+    const p = smoothProgress.current;
+    const v = smoothVelocity.current;
 
     if (!cameraLocked) {
       const targetZ = THREE.MathUtils.lerp(CAMERA_START_Z, CAMERA_END_Z, p);

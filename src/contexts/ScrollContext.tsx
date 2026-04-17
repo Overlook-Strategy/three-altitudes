@@ -58,7 +58,6 @@ interface ScrollProviderProps {
 }
 
 export function ScrollProvider({ children }: ScrollProviderProps) {
-  const [state, setState] = useState<ScrollState>({ ...defaultState, scrollToSection: () => {} });
   const prevScrollY = useRef(0);
   const rafId = useRef<number>(0);
   const lenisRef = useRef<any>(null);
@@ -74,6 +73,11 @@ export function ScrollProvider({ children }: ScrollProviderProps) {
       window.scrollTo({ top: targetY, behavior: 'smooth' });
     }
   }, []);
+
+  const [state, setState] = useState<ScrollState>(() => ({
+    ...defaultState,
+    scrollToSection,
+  }));
 
   const onScroll = useCallback(() => {
     const scrollY = window.scrollY || window.pageYOffset;
@@ -173,11 +177,6 @@ export function ScrollProvider({ children }: ScrollProviderProps) {
       window.removeEventListener('scroll', onScroll);
     };
   }, [onScroll]);
-
-  // Inject scrollToSection into state after it's available
-  useEffect(() => {
-    setState((prev) => ({ ...prev, scrollToSection }));
-  }, [scrollToSection]);
 
   return (
     <ScrollContext.Provider value={state}>
