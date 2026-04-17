@@ -1,21 +1,19 @@
 'use client';
 
 import Image from 'next/image';
-import { useRef, useEffect } from 'react';
 import { useScroll } from '@/contexts/ScrollContext';
 import type { SanityMediaItem } from '@/lib/sanity/types';
 
 /**
  * MediaLayers — fixed atmospheric media layers.
  *
- * Layer 0  — Shoreline hero video (wave-transition.mp4, poster=finn-surf-paddle-bw.jpg) [LCP optimized]
- * Layer 1  — Shoreline surf bg (finn-surf-paddle-bw.jpg, full-bleed)
- * Layer 2  — Shoreline surf bg 2 (finn-surf.jpg, full-bleed)
- * Layer 3  — Shoreline wave texture overlay (wave-teal.png)
- * Layer 4  — Shoreline wave vivid accent (wave-vivid.png)
- * Layer 5  — Pocket drums bg (Sanity photo[0] or finn-drums-mint.jpg fallback)
- * Layer 6  — Pocket drums bg 2 (Sanity photo[1] or finn-drums-live.jpg fallback)
- * Layer 7  — Code background video (Engine Room)
+ * Layer 0  — Shoreline surf bg (finn-surf-paddle-bw.jpg, full-bleed)
+ * Layer 1  — Shoreline surf bg 2 (finn-surf.jpg, full-bleed)
+ * Layer 2  — Shoreline wave texture overlay (wave-teal.png)
+ * Layer 3  — Shoreline wave vivid accent (wave-vivid.png)
+ * Layer 4  — Pocket drums bg (Sanity photo[0] or finn-drums-mint.jpg fallback)
+ * Layer 5  — Pocket drums bg 2 (Sanity photo[1] or finn-drums-live.jpg fallback)
+ * Layer 6  — Code background video (Engine Room)
  */
 
 interface MediaLayersProps {
@@ -78,29 +76,7 @@ export function MediaLayers({
   aviationPhotos = [],
   engineRoomVideoUrl,
 }: MediaLayersProps) {
-  const { progress, atmosphere } = useScroll();
-  const heroVideoRef = useRef<HTMLVideoElement>(null);
-
-  // ── Hero video — play/pause based on visibility ─────────────────────────────
-  useEffect(() => {
-    const video = heroVideoRef.current;
-    if (!video) return;
-    if (atmosphere === 'shoreline') {
-      video.play().catch(() => {});
-    } else {
-      video.pause();
-    }
-  }, [atmosphere]);
-
-  // ── Hero video opacity — full in shoreline, fades during transition ──────────
-  const heroVideoOpacity =
-    progress < 0.05
-      ? (progress / 0.05) * 0.55
-      : progress < 0.18
-        ? 0.55
-        : progress < 0.27
-          ? 0.55 * (1 - (progress - 0.18) / 0.09)
-          : 0;
+  const { progress } = useScroll();
 
   // ── Shoreline image backgrounds ────────────────────────────────────────────
   const surfPaddleOpacity =
@@ -161,45 +137,16 @@ export function MediaLayers({
 
   // ── Engine Room code video ──────────────────────────────────────────────────
   const codeVideoOpacity =
-    atmosphere === 'engine-room'
+    progress > 0.45 && progress < 0.70
       ? progress < 0.53
         ? (progress - 0.45) / 0.08
-        : progress > 0.70
-          ? Math.max(0, 1 - (progress - 0.70) / 0.08)
+        : progress > 0.62
+          ? Math.max(0, 1 - (progress - 0.62) / 0.08)
           : 1
       : 0;
 
   return (
     <>
-      {/* Shoreline: hero video — LCP poster strategy */}
-      <div
-        style={{
-          position: 'fixed',
-          inset: 0,
-          zIndex: 1,
-          pointerEvents: 'none',
-          opacity: heroVideoOpacity,
-          willChange: 'opacity',
-          mixBlendMode: 'screen',
-        }}
-      >
-        <video
-          ref={heroVideoRef}
-          poster="/images/finn-surf-paddle-bw.jpg"
-          src="/videos/wave-transition.mp4"
-          muted
-          loop
-          playsInline
-          preload="none"
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            objectPosition: 'center',
-          }}
-        />
-      </div>
-
       {/* Shoreline: surf paddle bg — Sanity shorelinePhotos[0] or static fallback */}
       <div
         style={{

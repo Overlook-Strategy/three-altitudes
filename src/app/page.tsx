@@ -3,6 +3,7 @@ import { ScrollSections } from '@/components/ui/ScrollSections';
 import { GhostingCode } from '@/components/ui/GhostingCode';
 import { MediaLayers } from '@/components/ui/MediaLayers';
 import { MainCanvasClient } from '@/components/canvas/MainCanvasClient';
+import { SectionFlash } from '@/components/ui/SectionFlash';
 import type { SanityMediaItem } from '@/lib/sanity/types';
 import {
   getWebProjects,
@@ -40,6 +41,7 @@ export default async function HomePage() {
         engineRoomVideoUrl={siteSettings?.engineRoomVideo?.url}
       />
       <GhostingCode />
+      <SectionFlash />
       <HUD />
       <ScrollSections
         hero={hero}

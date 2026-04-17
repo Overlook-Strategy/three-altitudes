@@ -164,7 +164,8 @@ export function ScrollSections({
             alignItems: 'center',
             justifyContent: 'center',
             opacity: show('shoreline') ? 1 : 0,
-            transition: 'opacity 0.9s ease',
+            transform: show('shoreline') ? 'translateY(0)' : 'translateY(18px)',
+            transition: 'opacity 0.55s ease, transform 0.65s cubic-bezier(0.16,1,0.3,1)',
             pointerEvents: show('shoreline') ? 'all' : 'none',
           }}
         >
@@ -230,6 +231,12 @@ export function ScrollSections({
               </a>
             </button>
           </div>
+
+          {/* Section bottom accent line + index */}
+          <div style={{ position: 'absolute', bottom: '2rem', left: 0, right: 0, display: 'flex', alignItems: 'center', padding: '0 3rem', gap: '1rem', pointerEvents: 'none' }}>
+            <span className="hud-text" style={{ fontSize: '0.38rem', letterSpacing: '0.4em', color: '#3dd9c4', opacity: 0.3, whiteSpace: 'nowrap' }}>01 // THE SHORELINE</span>
+            <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, rgba(61,217,196,0.25), transparent)' }} />
+          </div>
         </div>
       </section>
 
@@ -245,7 +252,8 @@ export function ScrollSections({
             alignItems: 'center',
             justifyContent: 'center',
             opacity: show('pocket') ? 1 : 0,
-            transition: 'opacity 0.9s ease',
+            transform: show('pocket') ? 'translateY(0)' : 'translateY(18px)',
+            transition: 'opacity 0.55s ease, transform 0.65s cubic-bezier(0.16,1,0.3,1)',
             pointerEvents: show('pocket') ? 'all' : 'none',
             padding: '0 clamp(1.5rem, 5vw, 4rem)',
           }}
@@ -526,6 +534,12 @@ export function ScrollSections({
 
             </div>
           </div>
+
+          {/* Section bottom accent line + index */}
+          <div style={{ position: 'absolute', bottom: '2rem', left: 0, right: 0, display: 'flex', alignItems: 'center', padding: '0 3rem', gap: '1rem', pointerEvents: 'none' }}>
+            <span className="hud-text" style={{ fontSize: '0.38rem', letterSpacing: '0.4em', color: '#ff8c00', opacity: 0.3, whiteSpace: 'nowrap' }}>02 // THE POCKET</span>
+            <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, rgba(255,140,0,0.25), transparent)' }} />
+          </div>
         </div>
       </section>
 
@@ -541,7 +555,8 @@ export function ScrollSections({
             alignItems: 'center',
             justifyContent: 'center',
             opacity: show('engine-room') ? 1 : 0,
-            transition: 'opacity 0.9s ease',
+            transform: show('engine-room') ? 'translateY(0)' : 'translateY(18px)',
+            transition: 'opacity 0.55s ease, transform 0.65s cubic-bezier(0.16,1,0.3,1)',
             pointerEvents: show('engine-room') ? 'all' : 'none',
             gap: '1.5rem',
             overflow: 'hidden',
@@ -637,6 +652,12 @@ export function ScrollSections({
               );
             })}
           </div>
+
+          {/* Section bottom accent line + index */}
+          <div style={{ position: 'absolute', bottom: '2rem', left: 0, right: 0, display: 'flex', alignItems: 'center', padding: '0 3rem', gap: '1rem', pointerEvents: 'none' }}>
+            <span className="hud-text" style={{ fontSize: '0.38rem', letterSpacing: '0.4em', color: '#888888', opacity: 0.3, whiteSpace: 'nowrap' }}>03 // THE ENGINE ROOM</span>
+            <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, rgba(136,136,136,0.25), transparent)' }} />
+          </div>
         </div>
       </section>
 
@@ -652,7 +673,8 @@ export function ScrollSections({
             alignItems: 'center',
             justifyContent: 'center',
             opacity: show('selected-work') ? 1 : 0,
-            transition: 'opacity 0.9s ease',
+            transform: show('selected-work') ? 'translateY(0)' : 'translateY(18px)',
+            transition: 'opacity 0.55s ease, transform 0.65s cubic-bezier(0.16,1,0.3,1)',
             pointerEvents: show('selected-work') ? 'all' : 'none',
             gap: '1.5rem',
           }}
@@ -667,6 +689,12 @@ export function ScrollSections({
 
           {/* Single browser mockup with tab switcher */}
           <SelectedWorkBrowser projects={activeWebProjects} />
+
+          {/* Section bottom accent line + index */}
+          <div style={{ position: 'absolute', bottom: '2rem', left: 0, right: 0, display: 'flex', alignItems: 'center', padding: '0 3rem', gap: '1rem', pointerEvents: 'none' }}>
+            <span className="hud-text" style={{ fontSize: '0.38rem', letterSpacing: '0.4em', color: '#888888', opacity: 0.3, whiteSpace: 'nowrap' }}>04 // SELECTED WORK</span>
+            <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, rgba(136,136,136,0.25), transparent)' }} />
+          </div>
         </div>
       </section>
 
@@ -682,7 +710,8 @@ export function ScrollSections({
             alignItems: 'center',
             justifyContent: 'center',
             opacity: show('horizon') ? 1 : 0,
-            transition: 'opacity 0.9s ease',
+            transform: show('horizon') ? 'translateY(0)' : 'translateY(18px)',
+            transition: 'opacity 0.55s ease, transform 0.65s cubic-bezier(0.16,1,0.3,1)',
             pointerEvents: show('horizon') ? 'all' : 'none',
             gap: '0.4rem',
             overflow: 'hidden',
@@ -799,6 +828,12 @@ export function ScrollSections({
                 </a>
               ))}
             </div>
+          </div>
+
+          {/* Section bottom accent line + index */}
+          <div style={{ position: 'absolute', bottom: '2rem', left: 0, right: 0, display: 'flex', alignItems: 'center', padding: '0 3rem', gap: '1rem', pointerEvents: 'none' }}>
+            <span className="hud-text" style={{ fontSize: '0.38rem', letterSpacing: '0.4em', color: '#444444', opacity: 0.3, whiteSpace: 'nowrap' }}>05 // THE HORIZON</span>
+            <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, rgba(68,68,68,0.25), transparent)' }} />
           </div>
         </div>
       </section>
