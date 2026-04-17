@@ -45,6 +45,31 @@ export const audioWork = defineType({
       fieldset: 'content',
     }),
     defineField({
+      name: 'tracks',
+      title: 'Featured Tracks',
+      type: 'array',
+      description: 'Individual tracks to showcase in the Sonic Work section. Each track links to Spotify.',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            defineField({ name: 'trackName', title: 'Track Name', type: 'string' }),
+            defineField({ name: 'artistName', title: 'Artist / Project Name', type: 'string' }),
+            defineField({ name: 'albumName', title: 'Album / Release', type: 'string' }),
+            defineField({
+              name: 'albumArt',
+              title: 'Album Art',
+              type: 'image',
+              options: { hotspot: true },
+            }),
+            defineField({ name: 'spotifyUrl', title: 'Spotify Track URL', type: 'url' }),
+            defineField({ name: 'role', title: 'Your Role', type: 'string', description: 'e.g. Producer, FOH Engineer' }),
+          ],
+          preview: { select: { title: 'trackName', subtitle: 'artistName', media: 'albumArt' } },
+        },
+      ],
+    }),
+    defineField({
       name: 'stats',
       title: 'Credential Stats',
       type: 'array',

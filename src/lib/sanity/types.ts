@@ -10,6 +10,7 @@ export interface SanityWebProject {
   tech: string[];
   role: string;
   type: string;
+  screenshotUrl?: string | null;
 }
 
 export interface SanityDevProject {
@@ -20,7 +21,6 @@ export interface SanityDevProject {
   tech: string[];
   role: string;
   status: string;
-  url?: string;
 }
 
 export interface SanityHero {
@@ -28,32 +28,30 @@ export interface SanityHero {
   identities: string[];
   locationLabel: string;
   coordinates: string;
-  primaryPhoto?: SanityMediaItem;
-  accentPhoto?: SanityMediaItem;
-}
-
-export interface SanityMediaItem {
-  _key: string;
-  _type: 'image' | 'file';
-  url: string;
-  mimeType?: string;
 }
 
 export interface SanityAudioStat {
   value: string;
   label: string;
-  sub?: string;
 }
 
 export interface SanityTouringCredit {
   artistName: string;
   role: string;
-  context?: string;
 }
 
 export interface SanityDiscipline {
   code: string;
   description: string;
+}
+
+export interface SanityTrack {
+  trackName: string;
+  artistName: string;
+  albumName: string;
+  albumArtUrl?: string;
+  spotifyUrl?: string;
+  role?: string;
 }
 
 export interface SanityAudioWork {
@@ -63,9 +61,7 @@ export interface SanityAudioWork {
   stats: SanityAudioStat[];
   touringCredits: SanityTouringCredit[];
   disciplines: SanityDiscipline[];
-  specialties: string[];
-  primaryPhoto?: SanityMediaItem;
-  accentPhoto?: SanityMediaItem;
+  tracks: SanityTrack[];
 }
 
 export interface SanityGauge {
@@ -86,12 +82,10 @@ export interface SanityAviation {
   tagline: string;
   gauges: SanityGauge[];
   beaconLinks: SanityBeaconLink[];
-  primaryPhoto?: SanityMediaItem;
-  accentPhoto?: SanityMediaItem;
 }
 
 export interface SanitySettings {
   siteName: string;
   email: string;
-  engineRoomVideo?: { url: string };
+  heroVideoUrl?: string;
 }
