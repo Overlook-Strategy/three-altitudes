@@ -52,6 +52,15 @@ export const siteSettings = defineType({
       },
     }),
     defineField({
+      name: 'heroVideo',
+      title: 'Hero Background Video',
+      type: 'file',
+      description: 'Video displayed fullscreen on the Shoreline (landing) section. Replaces the built-in wave video.',
+      options: {
+        accept: 'video/*',
+      },
+    }),
+    defineField({
       name: 'socialLinks',
       title: 'Social Links',
       type: 'array',
