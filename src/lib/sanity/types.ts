@@ -21,6 +21,7 @@ export interface SanityDevProject {
   tech: string[];
   role: string;
   status: string;
+  url?: string;
 }
 
 export interface SanityHero {

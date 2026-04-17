@@ -25,7 +25,11 @@ interface ScrollState {
   maxScroll: number;
   /** Scroll to a given section index (0-4) */
   scrollToSection: (index: number) => void;
+  /** Programmatically scroll to an element, selector, or pixel offset */
+  scrollTo: (target: string | HTMLElement | number, options?: { offset?: number; duration?: number }) => void;
 }
+
+const noop = () => {};
 
 const defaultState: ScrollState = {
   progress: 0,
@@ -34,6 +38,7 @@ const defaultState: ScrollState = {
   scrollY: 0,
   maxScroll: 1,
   scrollToSection: () => {},
+  scrollTo: noop,
 };
 
 const ScrollContext = createContext<ScrollState>(defaultState);
@@ -58,6 +63,13 @@ interface ScrollProviderProps {
 }
 
 export function ScrollProvider({ children }: ScrollProviderProps) {
+  const [state, setState] = useState<Omit<ScrollState, 'scrollToSection' | 'scrollTo'>>({
+    progress: 0,
+    velocity: 0,
+    atmosphere: 'shoreline',
+    scrollY: 0,
+    maxScroll: 1,
+  });
   const prevScrollY = useRef(0);
   const rafId = useRef<number>(0);
   const lenisRef = useRef<any>(null);
@@ -66,7 +78,8 @@ export function ScrollProvider({ children }: ScrollProviderProps) {
   const scrollToSection = useCallback((index: number) => {
     const clampedIndex = Math.max(0, Math.min(index, SECTION_PROGRESS.length - 1));
     const targetProgress = SECTION_PROGRESS[clampedIndex];
-    const targetY = targetProgress * maxScrollRef.current;
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    const targetY = targetProgress * (maxScroll > 0 ? maxScroll : maxScrollRef.current);
     if (lenisRef.current) {
       lenisRef.current.scrollTo(targetY, { duration: 1.4 });
     } else {
@@ -74,10 +87,22 @@ export function ScrollProvider({ children }: ScrollProviderProps) {
     }
   }, []);
 
-  const [state, setState] = useState<ScrollState>(() => ({
-    ...defaultState,
-    scrollToSection,
-  }));
+  const scrollTo = useCallback(
+    (target: string | HTMLElement | number, options?: { offset?: number; duration?: number }) => {
+      if (lenisRef.current) {
+        lenisRef.current.scrollTo(target, { offset: options?.offset ?? 0, duration: options?.duration ?? 1.4 });
+      } else {
+        // Fallback to native scroll when Lenis is not available
+        const el = typeof target === 'string' ? document.querySelector(target) : target;
+        if (el && typeof el !== 'number' && 'scrollIntoView' in el) {
+          (el as HTMLElement).scrollIntoView({ behavior: 'smooth' });
+        } else if (typeof target === 'number') {
+          window.scrollTo({ top: target, behavior: 'smooth' });
+        }
+      }
+    },
+    [],
+  );
 
   const onScroll = useCallback(() => {
     const scrollY = window.scrollY || window.pageYOffset;
@@ -179,7 +204,7 @@ export function ScrollProvider({ children }: ScrollProviderProps) {
   }, [onScroll]);
 
   return (
-    <ScrollContext.Provider value={state}>
+    <ScrollContext.Provider value={{ ...state, scrollToSection, scrollTo }}>
       {children}
     </ScrollContext.Provider>
   );

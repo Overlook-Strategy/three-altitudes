@@ -978,7 +978,7 @@ export function ScrollSections() {
       </section>
 
       {/* ─── Stage 4: Selected Work — Web Projects ─────────────────────── */}
-      <section style={{ height: '200vh', position: 'relative' }}>
+      <section id="selected-work" style={{ height: '200vh', position: 'relative' }}>
         <div
           style={{
             position: 'sticky',

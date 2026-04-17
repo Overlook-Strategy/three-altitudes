@@ -32,13 +32,7 @@ export default async function HomePage() {
       <GhostingCode />
       <SectionFlash />
       <HUD />
-      <ScrollSections
-        hero={hero}
-        audioWork={audioWork}
-        webProjects={webProjects}
-        devProjects={devProjects}
-        aviation={aviation}
-      />
+      <ScrollSections />
     </>
   );
 }
