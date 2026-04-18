@@ -25,6 +25,12 @@ import {
   WAVEFORM_BARS,
 } from '@/lib/fallbacks';
 
+const SECTION_ENTRY_MOTION = {
+  pocket: { y: 26, rotate: -7, baseScale: 0.93, scaleRange: 0.07 },
+  engine: { x: 44, rotateY: 7, baseScale: 0.94, scaleRange: 0.06 },
+  horizon: { y: 30, rotateX: 8, baseScale: 0.95, scaleRange: 0.05 },
+} as const;
+
 
 // ── Selected Work Browser ─────────────────────────────────────────────────────
 // Single macOS-style browser mockup with three stacked iframe panels,
@@ -265,7 +271,7 @@ export function ScrollSections({
   const prevAtmosphere = useRef(atmosphere);
 
   // Resolve data — Sanity data when available, fallback constants otherwise
-  const heroName = hero?.name?.trim() || 'FINN BENNETT';
+  const heroName = (hero?.name ?? '').trim() || 'FINN BENNETT';
   const heroLocationLabel = hero?.locationLabel ?? 'VENTURA, CA';
   const identities = hero?.identities?.length ? hero.identities : FALLBACK_IDENTITIES;
   const heroBgUrl = hero?.primaryPhotoUrl ?? null;
@@ -324,9 +330,9 @@ export function ScrollSections({
   const engineEnterMix = sectionMix(0.45, 0.57);
   const horizonEnterMix = sectionMix(0.76, 0.88);
 
-  const pocketSectionTransform = `translateY(${(1 - pocketEnterMix) * 26}px) rotate(${(1 - pocketEnterMix) * -7}deg) scale(${0.93 + pocketEnterMix * 0.07})`;
-  const engineSectionTransform = `translateX(${(1 - engineEnterMix) * 44}px) rotateY(${(1 - engineEnterMix) * 7}deg) scale(${0.94 + engineEnterMix * 0.06})`;
-  const horizonSectionTransform = `translateY(${(1 - horizonEnterMix) * 30}px) rotateX(${(1 - horizonEnterMix) * 8}deg) scale(${0.95 + horizonEnterMix * 0.05})`;
+  const pocketSectionTransform = `translateY(${(1 - pocketEnterMix) * SECTION_ENTRY_MOTION.pocket.y}px) rotate(${(1 - pocketEnterMix) * SECTION_ENTRY_MOTION.pocket.rotate}deg) scale(${SECTION_ENTRY_MOTION.pocket.baseScale + pocketEnterMix * SECTION_ENTRY_MOTION.pocket.scaleRange})`;
+  const engineSectionTransform = `translateX(${(1 - engineEnterMix) * SECTION_ENTRY_MOTION.engine.x}px) rotateY(${(1 - engineEnterMix) * SECTION_ENTRY_MOTION.engine.rotateY}deg) scale(${SECTION_ENTRY_MOTION.engine.baseScale + engineEnterMix * SECTION_ENTRY_MOTION.engine.scaleRange})`;
+  const horizonSectionTransform = `translateY(${(1 - horizonEnterMix) * SECTION_ENTRY_MOTION.horizon.y}px) rotateX(${(1 - horizonEnterMix) * SECTION_ENTRY_MOTION.horizon.rotateX}deg) scale(${SECTION_ENTRY_MOTION.horizon.baseScale + horizonEnterMix * SECTION_ENTRY_MOTION.horizon.scaleRange})`;
 
   useEffect(() => {
     const id = setInterval(() => {
