@@ -36,6 +36,11 @@ const SECTION_ENTRY_MOTION = {
 const SCROLL_HINT_FADE_END = 0.06;
 const SECTION_BOUNDARIES = [0.25, 0.5, 0.75] as const;
 const VEIL_TRANSITION_RADIUS = 0.055;
+const VEIL_BASE_RGB = '5,8,12';
+const VEIL_BACKGROUND = `
+  radial-gradient(ellipse at center, rgba(0,0,0,0) 30%, rgba(0,0,0,0.55) 100%),
+  linear-gradient(180deg, rgba(${VEIL_BASE_RGB},0.8) 0%, rgba(${VEIL_BASE_RGB},0.2) 22%, rgba(${VEIL_BASE_RGB},0.2) 78%, rgba(${VEIL_BASE_RGB},0.8) 100%)
+`;
 
 
 // ── Selected Work Browser ─────────────────────────────────────────────────────
@@ -343,12 +348,13 @@ export function ScrollSections({
   const pocketEnterMix = sectionMix(0.21, 0.32);
   const engineEnterMix = sectionMix(0.45, 0.57);
   const horizonEnterMix = sectionMix(0.76, 0.88);
-  const sectionTransitionVeilOpacity = SECTION_BOUNDARIES.reduce((max, boundary) => {
+  const sectionTransitionVeilOpacity = SECTION_BOUNDARIES.reduce((maxOpacity, boundary) => {
     const dist = Math.abs(progress - boundary);
-    if (dist >= VEIL_TRANSITION_RADIUS) return max;
+    if (dist >= VEIL_TRANSITION_RADIUS) return maxOpacity;
     const transitionProgress = 1 - dist / VEIL_TRANSITION_RADIUS;
+    // Smoothstep interpolation to avoid abrupt veil intensity changes.
     const eased = transitionProgress * transitionProgress * (3 - 2 * transitionProgress);
-    return Math.max(max, eased);
+    return Math.max(maxOpacity, eased);
   }, 0);
 
   const pocketSectionTransform = `translateY(${(1 - pocketEnterMix) * SECTION_ENTRY_MOTION.pocket.y}px) rotate(${(1 - pocketEnterMix) * SECTION_ENTRY_MOTION.pocket.rotate}deg) scale(${SECTION_ENTRY_MOTION.pocket.baseScale + pocketEnterMix * SECTION_ENTRY_MOTION.pocket.scaleRange})`;
@@ -417,10 +423,7 @@ export function ScrollSections({
           pointerEvents: 'none',
           opacity: sectionTransitionVeilOpacity,
           transition: 'opacity 180ms linear',
-          background: `
-            radial-gradient(ellipse at center, rgba(0,0,0,0) 30%, rgba(0,0,0,0.55) 100%),
-            linear-gradient(180deg, rgba(5,8,12,0.8) 0%, rgba(5,8,12,0.2) 22%, rgba(5,8,12,0.2) 78%, rgba(5,8,12,0.8) 100%)
-          `,
+          background: VEIL_BACKGROUND,
           mixBlendMode: 'multiply',
         }}
       />
