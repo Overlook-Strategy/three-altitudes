@@ -265,7 +265,7 @@ export function ScrollSections({
   const prevAtmosphere = useRef(atmosphere);
 
   // Resolve data — Sanity data when available, fallback constants otherwise
-  const heroName = hero?.name?.trim() ? hero.name : 'FINN BENNETT';
+  const heroName = hero?.name?.trim() || 'FINN BENNETT';
   const heroLocationLabel = hero?.locationLabel ?? 'VENTURA, CA';
   const identities = hero?.identities?.length ? hero.identities : FALLBACK_IDENTITIES;
   const heroBgUrl = hero?.primaryPhotoUrl ?? null;
