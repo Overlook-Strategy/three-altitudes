@@ -34,6 +34,8 @@ const SECTION_ENTRY_MOTION = {
 // Scroll progress fraction at which the scroll-down hint is fully hidden.
 // The hint fades linearly from 1 → 0 as progress goes 0 → SCROLL_HINT_FADE_END.
 const SCROLL_HINT_FADE_END = 0.06;
+const SECTION_BOUNDARIES = [0.25, 0.5, 0.75] as const;
+const VEIL_TRANSITION_RADIUS = 0.055;
 
 
 // ── Selected Work Browser ─────────────────────────────────────────────────────
@@ -341,12 +343,11 @@ export function ScrollSections({
   const pocketEnterMix = sectionMix(0.21, 0.32);
   const engineEnterMix = sectionMix(0.45, 0.57);
   const horizonEnterMix = sectionMix(0.76, 0.88);
-  const sectionTransitionVeil = [0.25, 0.5, 0.75].reduce((max, boundary) => {
+  const sectionTransitionVeilOpacity = SECTION_BOUNDARIES.reduce((max, boundary) => {
     const dist = Math.abs(progress - boundary);
-    const radius = 0.055;
-    if (dist >= radius) return max;
-    const t = 1 - dist / radius;
-    const eased = t * t * (3 - 2 * t);
+    if (dist >= VEIL_TRANSITION_RADIUS) return max;
+    const transitionProgress = 1 - dist / VEIL_TRANSITION_RADIUS;
+    const eased = transitionProgress * transitionProgress * (3 - 2 * transitionProgress);
     return Math.max(max, eased);
   }, 0);
 
@@ -414,7 +415,7 @@ export function ScrollSections({
           inset: 0,
           zIndex: 40,
           pointerEvents: 'none',
-          opacity: sectionTransitionVeil,
+          opacity: sectionTransitionVeilOpacity,
           transition: 'opacity 180ms linear',
           background: `
             radial-gradient(ellipse at center, rgba(0,0,0,0) 30%, rgba(0,0,0,0.55) 100%),
