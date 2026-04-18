@@ -90,7 +90,7 @@ function SelectedWorkBrowser({ webProjects }: { webProjects: SanityWebProject[] 
     <div
       ref={containerRef}
       style={{
-        width: 'clamp(360px, 72vw, 900px)',
+        width: 'clamp(340px, 66vw, 820px)',
         opacity: isVisible ? 1 : 0,
         transform: isVisible ? 'translateY(0)' : 'translateY(24px)',
         transition: 'opacity 0.8s ease, transform 0.8s ease',
@@ -341,6 +341,14 @@ export function ScrollSections({
   const pocketEnterMix = sectionMix(0.21, 0.32);
   const engineEnterMix = sectionMix(0.45, 0.57);
   const horizonEnterMix = sectionMix(0.76, 0.88);
+  const sectionTransitionVeil = [0.25, 0.5, 0.75].reduce((max, boundary) => {
+    const dist = Math.abs(progress - boundary);
+    const radius = 0.055;
+    if (dist >= radius) return max;
+    const t = 1 - dist / radius;
+    const eased = t * t * (3 - 2 * t);
+    return Math.max(max, eased);
+  }, 0);
 
   const pocketSectionTransform = `translateY(${(1 - pocketEnterMix) * SECTION_ENTRY_MOTION.pocket.y}px) rotate(${(1 - pocketEnterMix) * SECTION_ENTRY_MOTION.pocket.rotate}deg) scale(${SECTION_ENTRY_MOTION.pocket.baseScale + pocketEnterMix * SECTION_ENTRY_MOTION.pocket.scaleRange})`;
   const engineSectionTransform = `translateX(${(1 - engineEnterMix) * SECTION_ENTRY_MOTION.engine.x}px) rotateY(${(1 - engineEnterMix) * SECTION_ENTRY_MOTION.engine.rotateY}deg) scale(${SECTION_ENTRY_MOTION.engine.baseScale + engineEnterMix * SECTION_ENTRY_MOTION.engine.scaleRange})`;
@@ -398,6 +406,23 @@ export function ScrollSections({
 
   return (
     <div className="scroll-content" style={{ height: '800vh' }}>
+      {/* Full-page transition veil to soften hard image edges at section boundaries */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 40,
+          pointerEvents: 'none',
+          opacity: sectionTransitionVeil,
+          transition: 'opacity 180ms linear',
+          background: `
+            radial-gradient(ellipse at center, rgba(0,0,0,0) 30%, rgba(0,0,0,0.55) 100%),
+            linear-gradient(180deg, rgba(5,8,12,0.8) 0%, rgba(5,8,12,0.2) 22%, rgba(5,8,12,0.2) 78%, rgba(5,8,12,0.8) 100%)
+          `,
+          mixBlendMode: 'multiply',
+        }}
+      />
 
       {/* ─── Stage 1: The Shoreline — Identity ────────────────────────── */}
       <section style={{ height: '200vh', position: 'relative' }}>
@@ -951,12 +976,14 @@ export function ScrollSections({
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: 'center',
+            justifyContent: 'flex-start',
             opacity: engineRoomOpacity,
             transform: engineSectionTransform,
             filter: `blur(${(1 - engineEnterMix) * 1.4}px)`,
             pointerEvents: engineRoomOpacity > 0.1 ? 'all' : 'none',
-            gap: '1.5rem',
+            gap: 'clamp(2.25rem, 6vh, 5rem)',
+            paddingTop: 'clamp(1.5rem, 5vh, 4rem)',
+            paddingBottom: 'clamp(2.2rem, 6vh, 5rem)',
             overflow: 'hidden',
             willChange: 'transform, filter',
           }}
@@ -993,7 +1020,7 @@ export function ScrollSections({
                 display: 'grid',
                 gridTemplateColumns: 'repeat(3, 1fr)',
                 gap: '1rem',
-                maxHeight: '40vh',
+                maxHeight: 'min(36vh, 340px)',
                 overflowY: 'auto',
                 scrollbarWidth: 'thin',
                 scrollbarColor: 'rgba(136,136,136,0.3) transparent',
@@ -1079,7 +1106,9 @@ export function ScrollSections({
           </div>
 
           {/* Single browser mockup with tab switcher (web work) */}
-          <SelectedWorkBrowser webProjects={webProjects} />
+          <div style={{ marginTop: 'clamp(0.75rem, 3vh, 2.5rem)' }}>
+            <SelectedWorkBrowser webProjects={webProjects} />
+          </div>
         </div>
       </section>
 
