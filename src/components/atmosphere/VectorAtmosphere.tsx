@@ -6,6 +6,10 @@ import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 
 const MODULE_COUNT = 14;
+const FLIGHT_CYCLE_RANGE = 32;
+const MIN_AIRPLANE_SCALE = 0.9;
+const AIRPLANE_SCALE_RANGE = 1.1;
+const FLIGHT_CYCLE_DEPTH_FACTOR = 0.45;
 
 // ── Shared Simplex Noise GLSL (Ashima / McEwan, BSD licensed) ───────────────
 
@@ -175,7 +179,7 @@ export function EngineRoomAtmosphere() {
         x: (Math.random() - 0.5) * 24,
         y: (Math.random() - 0.5) * 14,
         z: -52 - i * 3.2,
-        scale: 0.9 + Math.random() * 1.1,
+        scale: MIN_AIRPLANE_SCALE + Math.random() * AIRPLANE_SCALE_RANGE,
         phase: Math.random() * Math.PI * 2,
         floatSpeed: 0.12 + Math.random() * 0.22,
         heading: Math.random() * Math.PI * 2,
@@ -183,7 +187,7 @@ export function EngineRoomAtmosphere() {
         pitch: (Math.random() - 0.5) * 0.12,
         bankDrift: 0.09 + Math.random() * 0.12,
         yawDrift: (Math.random() - 0.5) * 0.006,
-        forwardPhaseOffset: Math.random() * 32,
+        flightCycleOffset: Math.random() * FLIGHT_CYCLE_RANGE,
       })),
     []
   );
@@ -242,11 +246,12 @@ export function EngineRoomAtmosphere() {
 
     for (let i = 0; i < MODULE_COUNT; i++) {
       const d = moduleData[i];
-      const flightCycle = (time * (0.8 + d.floatSpeed) + d.forwardPhaseOffset) % 32;
+      const flightCycle =
+        (time * (0.8 + d.floatSpeed) + d.flightCycleOffset) % FLIGHT_CYCLE_RANGE;
       dummy.position.set(
         d.x,
         d.y + Math.sin(time * d.floatSpeed + d.phase) * 0.35,
-        d.z + flightCycle * 0.45
+        d.z + flightCycle * FLIGHT_CYCLE_DEPTH_FACTOR
       );
       dummy.scale.setScalar(d.scale);
       dummy.rotation.set(
