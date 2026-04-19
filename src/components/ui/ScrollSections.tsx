@@ -31,8 +31,8 @@ const SECTION_ENTRY_MOTION = {
   horizon: { y: 30, rotateX: 8, baseScale: 0.95, scaleRange: 0.05 },
 } as const;
 
-// With 4 sections at 200vh each, total height is 800vh and maxScroll is 700vh (minus 1 viewport).
-// Section starts at 200/400/600vh normalize to 2/7, 4/7, 6/7 against maxScroll.
+// With 4 sections at 200vh each, total height is 800vh and maxScroll is 700vh.
+// Section starts at 200vh/400vh/600vh, which normalize to 2/7, 4/7, 6/7 of maxScroll.
 const SECTION_BOUNDARIES = [2 / 7, 4 / 7, 6 / 7] as const;
 const VEIL_TRANSITION_RADIUS = 0.055;
 const VEIL_BASE_RGB = '5,8,12';

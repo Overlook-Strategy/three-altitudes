@@ -105,8 +105,9 @@ export function ScrollProvider({ children }: ScrollProviderProps) {
 
   const scrollToSection = useCallback((index: number) => {
     const sectionProgress = sectionProgressRef.current;
+    if (!sectionProgress.length) return;
     const clampedIndex = Math.max(0, Math.min(index, sectionProgress.length - 1));
-    const targetProgress = sectionProgress[clampedIndex] ?? 0;
+    const targetProgress = sectionProgress[clampedIndex];
     const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
     const targetY = targetProgress * (maxScroll > 0 ? maxScroll : maxScrollRef.current);
     if (lenisRef.current) {
