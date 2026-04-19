@@ -183,7 +183,7 @@ export function EngineRoomAtmosphere() {
         pitch: (Math.random() - 0.5) * 0.12,
         bankDrift: 0.09 + Math.random() * 0.12,
         yawDrift: (Math.random() - 0.5) * 0.006,
-        forwardOffset: Math.random() * 32,
+        forwardPhaseOffset: Math.random() * 32,
       })),
     []
   );
@@ -242,7 +242,7 @@ export function EngineRoomAtmosphere() {
 
     for (let i = 0; i < MODULE_COUNT; i++) {
       const d = moduleData[i];
-      const flightCycle = (time * (0.8 + d.floatSpeed) + d.forwardOffset) % 32;
+      const flightCycle = (time * (0.8 + d.floatSpeed) + d.forwardPhaseOffset) % 32;
       dummy.position.set(
         d.x,
         d.y + Math.sin(time * d.floatSpeed + d.phase) * 0.35,
