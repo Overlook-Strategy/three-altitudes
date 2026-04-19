@@ -51,6 +51,7 @@ export function useScroll() {
 const FALLBACK_SECTION_PROGRESS = [0, 0.25, 0.5, 0.75];
 
 function getSectionProgressPoints(maxScroll: number) {
+  // During initial layout or very short content, maxScroll can be 0; keep stable fallback snap points.
   if (typeof document === 'undefined' || maxScroll <= 0) return FALLBACK_SECTION_PROGRESS;
   const sectionEls = Array.from(
     document.querySelectorAll<HTMLElement>('[data-scroll-section]')

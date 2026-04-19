@@ -31,6 +31,8 @@ const SECTION_ENTRY_MOTION = {
   horizon: { y: 30, rotateX: 8, baseScale: 0.95, scaleRange: 0.05 },
 } as const;
 
+// With 4 sections at 200vh each, total height is 800vh and maxScroll is 700vh (minus 1 viewport).
+// Section starts at 200/400/600vh normalize to 2/7, 4/7, 6/7 against maxScroll.
 const SECTION_BOUNDARIES = [2 / 7, 4 / 7, 6 / 7] as const;
 const VEIL_TRANSITION_RADIUS = 0.055;
 const VEIL_BASE_RGB = '5,8,12';
@@ -333,6 +335,7 @@ export function ScrollSections({
   const shorelineOpacity  = sectionOpacity(-0.02, 0.03, 0.22, 0.28);
   const pocketOpacity     = sectionOpacity(0.23, 0.29, 0.50, 0.56);
   const engineRoomOpacity = sectionOpacity(0.47, 0.54, 0.77, 0.83);
+  // Keep the final horizon section fully present through page end by placing fade-out past max progress (1.0).
   const horizonOpacity    = sectionOpacity(0.82, 0.9, 1.2, 1.28);
 
   const sectionMix = (start: number, end: number) => {
