@@ -101,6 +101,7 @@ export function ScrollProvider({ children }: ScrollProviderProps) {
   const lenisRef = useRef<any>(null);
   const maxScrollRef = useRef(1);
   const sectionPointsRef = useRef<SectionPoint[]>(FALLBACK_SECTION_POINTS);
+  const isCoarsePointerRef = useRef(false);
 
   const scrollToSection = useCallback((index: number) => {
     const sectionPoints = sectionPointsRef.current;
@@ -136,21 +137,32 @@ export function ScrollProvider({ children }: ScrollProviderProps) {
   const onScroll = useCallback(() => {
     const scrollY = window.scrollY || window.pageYOffset;
     const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-    const sectionPoints = getSectionPoints(maxScroll);
-    sectionPointsRef.current = sectionPoints;
+    const sectionPoints = sectionPointsRef.current;
     maxScrollRef.current = maxScroll;
     const progress = maxScroll > 0 ? Math.min(scrollY / maxScroll, 1) : 0;
     const velocity = scrollY - prevScrollY.current;
     prevScrollY.current = scrollY;
+    const nextAtmosphere = getAtmosphere(progress, sectionPoints);
 
-    setState((prev) => ({
-      ...prev,
-      progress,
-      velocity,
-      atmosphere: getAtmosphere(progress, sectionPoints),
-      scrollY,
-      maxScroll,
-    }));
+    setState((prev) => {
+      if (
+        Math.abs(prev.progress - progress) < 0.0004 &&
+        Math.abs(prev.velocity - velocity) < 0.5 &&
+        prev.scrollY === scrollY &&
+        prev.maxScroll === maxScroll &&
+        prev.atmosphere === nextAtmosphere
+      ) {
+        return prev;
+      }
+      return {
+        ...prev,
+        progress,
+        velocity,
+        atmosphere: nextAtmosphere,
+        scrollY,
+        maxScroll,
+      };
+    });
   }, []);
 
   useEffect(() => {
@@ -158,15 +170,23 @@ export function ScrollProvider({ children }: ScrollProviderProps) {
     let lenis: any = null;
     let snapDebounceId: ReturnType<typeof setTimeout> | null = null;
 
+    const recalcSectionLayout = () => {
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      maxScrollRef.current = maxScroll > 0 ? maxScroll : 1;
+      sectionPointsRef.current = getSectionPoints(maxScroll);
+    };
+
     async function initLenis() {
       try {
         const Lenis = (await import('lenis')).default;
+        isCoarsePointerRef.current = window.matchMedia('(pointer: coarse)').matches;
         lenis = new Lenis({
           duration: 1.2,
           easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
           orientation: 'vertical',
           gestureOrientation: 'vertical',
           smoothWheel: true,
+          smoothTouch: true,
           touchMultiplier: 2,
         });
 
@@ -187,12 +207,12 @@ export function ScrollProvider({ children }: ScrollProviderProps) {
           // Section snap: debounce 550ms after scroll stops, then snap to nearest section start
           if (snapDebounceId) clearTimeout(snapDebounceId);
           snapDebounceId = setTimeout(() => {
+            if (isCoarsePointerRef.current) return;
             const scrollY = window.scrollY || 0;
             const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
             if (maxScroll <= 0) return;
             const p = scrollY / maxScroll;
-            const sectionPoints = getSectionPoints(maxScroll);
-            sectionPointsRef.current = sectionPoints;
+            const sectionPoints = sectionPointsRef.current;
 
             // Find nearest section start
             let nearestIdx = 0;
@@ -227,13 +247,18 @@ export function ScrollProvider({ children }: ScrollProviderProps) {
       }
     }
 
+    recalcSectionLayout();
     initLenis();
+    window.addEventListener('resize', recalcSectionLayout, { passive: true });
+    window.addEventListener('orientationchange', recalcSectionLayout, { passive: true });
 
     return () => {
       if (snapDebounceId) clearTimeout(snapDebounceId);
       if (rafId.current) cancelAnimationFrame(rafId.current);
       if (lenisRef.current) lenisRef.current.destroy();
       window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', recalcSectionLayout);
+      window.removeEventListener('orientationchange', recalcSectionLayout);
     };
   }, [onScroll]);
 

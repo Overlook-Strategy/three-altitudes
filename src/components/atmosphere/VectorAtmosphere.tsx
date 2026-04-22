@@ -395,10 +395,10 @@ export function HorizonAtmosphere() {
 
     // Clouds: start only after aviation section begins.
     const visibility =
-      progress < 0.79
+      progress < 0.83
         ? 0
-        : progress < 0.90
-          ? (progress - 0.79) / 0.11
+        : progress < 0.94
+          ? (progress - 0.83) / 0.11
           : 1;
 
     // ── Per-layer material + drift updates ────────────────────────────────

@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, Suspense } from 'react';
+import { useRef, useState, useEffect, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { PerspectiveCamera } from '@react-three/drei';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
@@ -12,18 +12,27 @@ import { EngineRoomAtmosphere, HorizonAtmosphere } from '../atmosphere/VectorAtm
 
 export function MainCanvas() {
   const transitionRef = useRef<any>(null);
+  const [isCoarsePointer, setIsCoarsePointer] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia('(pointer: coarse), (max-width: 900px)');
+    const update = () => setIsCoarsePointer(media.matches);
+    update();
+    media.addEventListener('change', update);
+    return () => media.removeEventListener('change', update);
+  }, []);
 
   return (
     <div className="canvas-container">
       <Canvas
         gl={{
-          antialias: true,
+          antialias: !isCoarsePointer,
           alpha: false,
           powerPreference: 'high-performance',
           stencil: false,
           depth: true,
         }}
-        dpr={[1, 1.5]}
+        dpr={isCoarsePointer ? [1, 1.2] : [1, 1.5]}
         flat={false}
       >
         <PerspectiveCamera makeDefault fov={60} near={0.1} far={300} position={[0, 0, 10]} />
@@ -59,10 +68,10 @@ export function MainCanvas() {
         <EffectComposer>
           <TransitionPass ref={transitionRef} />
           <Bloom
-            intensity={0.6}
+            intensity={isCoarsePointer ? 0.35 : 0.6}
             luminanceThreshold={0.55}
             luminanceSmoothing={0.85}
-            mipmapBlur
+            mipmapBlur={!isCoarsePointer}
           />
         </EffectComposer>
       </Canvas>
