@@ -9,13 +9,14 @@ import { TransitionPass } from '../transitions/TransitionPass';
 import { ShorelineAtmosphere } from '../atmosphere/KineticAtmosphere';
 import { PocketAtmosphere } from '../atmosphere/FluidAtmosphere';
 import { EngineRoomAtmosphere, HorizonAtmosphere } from '../atmosphere/VectorAtmosphere';
+import { COMPACT_LAYOUT_MEDIA_QUERY } from '@/lib/responsive';
 
 export function MainCanvas() {
   const transitionRef = useRef<any>(null);
   const [isCoarsePointer, setIsCoarsePointer] = useState(false);
 
   useEffect(() => {
-    const media = window.matchMedia('(pointer: coarse), (max-width: 900px)');
+    const media = window.matchMedia(COMPACT_LAYOUT_MEDIA_QUERY);
     const update = () => setIsCoarsePointer(media.matches);
     update();
     media.addEventListener('change', update);

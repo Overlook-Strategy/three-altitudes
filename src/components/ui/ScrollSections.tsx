@@ -24,6 +24,7 @@ import {
   DATA_COLUMNS,
   WAVEFORM_BARS,
 } from '@/lib/fallbacks';
+import { COMPACT_LAYOUT_MEDIA_QUERY } from '@/lib/responsive';
 
 const SECTION_ENTRY_MOTION = {
   pocket: { y: 26, rotate: -7, baseScale: 0.93, scaleRange: 0.07 },
@@ -43,6 +44,7 @@ const VEIL_BACKGROUND = `
   radial-gradient(ellipse at center, rgba(0,0,0,0) 30%, rgba(0,0,0,0.55) 100%),
   linear-gradient(180deg, rgba(${VEIL_BASE_RGB},0.8) 0%, rgba(${VEIL_BASE_RGB},0.2) 22%, rgba(${VEIL_BASE_RGB},0.2) 78%, rgba(${VEIL_BASE_RGB},0.8) 100%)
 `;
+const CASCADE_TRIGGER_PROGRESS = 0.47;
 
 
 // ── Selected Work Browser ─────────────────────────────────────────────────────
@@ -385,7 +387,7 @@ export function ScrollSections({
   }, [identities.length]);
 
   useEffect(() => {
-    const media = window.matchMedia('(max-width: 900px), (pointer: coarse)');
+    const media = window.matchMedia(COMPACT_LAYOUT_MEDIA_QUERY);
     const update = () => setIsCompactLayout(media.matches);
     update();
     media.addEventListener('change', update);
@@ -404,15 +406,16 @@ export function ScrollSections({
 
   // Data cascade trigger slightly before engine-room entry to land earlier in the transition.
   useEffect(() => {
+    const previousProgress = prevProgressRef.current;
+    prevProgressRef.current = progress;
     const crossedIntoCascadeZone =
-      prevProgressRef.current < 0.47 && progress >= 0.47;
+      previousProgress < CASCADE_TRIGGER_PROGRESS &&
+      progress >= CASCADE_TRIGGER_PROGRESS;
     if (crossedIntoCascadeZone) {
       setCascadeActive(true);
       const t = setTimeout(() => setCascadeActive(false), 2000);
-      prevProgressRef.current = progress;
       return () => clearTimeout(t);
     }
-    prevProgressRef.current = progress;
   }, [progress]);
 
   // Pocket section entrance — triggers once on first visit
@@ -481,6 +484,7 @@ export function ScrollSections({
       {/* ─── Stage 1: The Shoreline — Identity ────────────────────────── */}
       <section data-scroll-section data-atmosphere="shoreline" data-section-index={0} style={{ height: '100vh', position: 'relative' }}>
         <div
+          tabIndex={isCompactLayout ? 0 : -1}
           style={{
             position: 'sticky',
             top: 0,
@@ -628,6 +632,7 @@ export function ScrollSections({
       {/* ─── Stage 2: The Pocket — Sonic Work ─────────────────────────── */}
       <section data-scroll-section data-atmosphere="pocket" data-section-index={1} style={{ height: '100vh', position: 'relative' }}>
         <div
+          tabIndex={isCompactLayout ? 0 : -1}
           style={{
             position: 'sticky',
             top: 0,
@@ -635,14 +640,13 @@ export function ScrollSections({
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: 'center',
+            justifyContent: isCompactLayout ? 'flex-start' : 'center',
             opacity: pocketOpacity,
             transform: pocketSectionTransform,
             filter: isCompactLayout ? 'none' : `blur(${(1 - pocketEnterMix) * 1.2}px)`,
             pointerEvents: pocketOpacity > 0.1 ? 'all' : 'none',
             padding: '0 clamp(1.5rem, 5vw, 4rem)',
             textAlign: 'left',
-            justifyContent: isCompactLayout ? 'flex-start' : 'center',
             overflowY: isCompactLayout ? 'auto' : 'visible',
             paddingTop: isCompactLayout ? 'clamp(3.5rem, 8vh, 5rem)' : '0',
             paddingBottom: isCompactLayout ? 'clamp(2.5rem, 7vh, 4rem)' : '0',
@@ -1004,7 +1008,6 @@ export function ScrollSections({
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: 'center',
             opacity: engineRoomOpacity,
             transform: engineSectionTransform,
             filter: isCompactLayout ? 'none' : `blur(${(1 - engineEnterMix) * 1.4}px)`,

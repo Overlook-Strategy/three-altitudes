@@ -56,6 +56,12 @@ const FALLBACK_SECTION_POINTS: SectionPoint[] = [
   { progress: 0.75, atmosphere: 'engine-room' },
   { progress: 1, atmosphere: 'horizon' },
 ];
+// Skip tiny progress deltas (<0.04% of total range) to reduce noisy re-renders from
+// smooth scrolling while keeping section transitions visually responsive.
+const PROGRESS_CHANGE_THRESHOLD = 0.0004;
+// Ignore sub-pixel-equivalent velocity jitter so animation hooks only react to
+// meaningful motion changes instead of high-frequency touch/momentum noise.
+const VELOCITY_CHANGE_THRESHOLD = 0.5;
 
 function getSectionPoints(maxScroll: number): SectionPoint[] {
   // During initial layout or very short content, maxScroll can be 0; keep stable fallback snap points.
@@ -146,9 +152,8 @@ export function ScrollProvider({ children }: ScrollProviderProps) {
 
     setState((prev) => {
       if (
-        Math.abs(prev.progress - progress) < 0.0004 &&
-        Math.abs(prev.velocity - velocity) < 0.5 &&
-        prev.scrollY === scrollY &&
+        Math.abs(prev.progress - progress) < PROGRESS_CHANGE_THRESHOLD &&
+        Math.abs(prev.velocity - velocity) < VELOCITY_CHANGE_THRESHOLD &&
         prev.maxScroll === maxScroll &&
         prev.atmosphere === nextAtmosphere
       ) {
@@ -186,7 +191,6 @@ export function ScrollProvider({ children }: ScrollProviderProps) {
           orientation: 'vertical',
           gestureOrientation: 'vertical',
           smoothWheel: true,
-          smoothTouch: true,
           touchMultiplier: 2,
         });
 
