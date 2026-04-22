@@ -32,7 +32,7 @@ const SECTION_ENTRY_MOTION = {
   horizon: { y: 30, rotateX: 8, baseScale: 0.95, scaleRange: 0.05 },
 } as const;
 
-const SECTION_STARTS = [0, 0.25, 0.5, 0.75, 1] as const;
+const SECTION_STARTS: number[] = [0, 0.25, 0.5, 0.75, 1];
 const SECTION_BOUNDARIES = [0.25, 0.5, 0.75] as const;
 const VEIL_TRANSITION_RADIUS = 0.055;
 const VEIL_BASE_RGB = '5,8,12';
